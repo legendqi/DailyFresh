@@ -16,6 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from . import views
 urlpatterns = [
-    url(r'^register/$', views.register)
+    url(r'^register/$', views.register),
+    url(r'^register_handle/$', views.register_handle),
+    url(r'^login/$', views.login),
+    url(r'^register_exist/$', views.register_exist),
+    url(r'^user_login_handle/$', views.user_login_handle),
+    url(r'^user_center_info/$', views.user_center_info),
 
 ]

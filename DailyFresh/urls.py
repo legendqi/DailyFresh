@@ -18,6 +18,6 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     url(r'admin/', admin.site.urls),
-    url('^user/', include('df_user.urls')),
+    url('^user/', include('df_user.urls', namespace='user')),
 
 ]
