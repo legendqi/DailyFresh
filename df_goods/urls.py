@@ -2,8 +2,8 @@ from django.conf.urls import  url
 from . import views
 urlpatterns = [
     url(r'^index/$', views.index),
-    url(r'^detail/$', views.detail),
-    url(r'^list/$', views.list),
+    url(r'^detail/(\d+)/$', views.detail),
+    url(r'^list/(\d+)_(\d+)_(\d+)/$', views.list),
     # url(r'^register_exist/$', views.register_exist),
     # url(r'^user_login_handle/$', views.user_login_handle),
     # url(r'^user_center_info/$', views.user_center_info),
