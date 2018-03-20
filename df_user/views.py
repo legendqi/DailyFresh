@@ -44,12 +44,14 @@ def login(request):
     return render(request, 'df_user/login.html', context)
 
 
+# 用户名已经存在查询
 def register_exist(request):
     uname = request.GET.get('uname')
     count = UserInfo.objects.filter(uname=uname).count()
     return JsonResponse({'count': count})
 
 
+# 用户登录处理
 def user_login_handle(request):
     post = request.POST
     username = post.get('username')
@@ -78,8 +80,49 @@ def user_login_handle(request):
         return render(request, 'df_user/login.html', context)
 
 
+# 用户中心
 def user_center_info(request):
-    user_email = UserInfo.objects.get(id=request.session['user_id']).email
-    context = {'title': '用户中心', 'user_email': user_email,
-               'user_name': request.session['user_name']}
+    userInfo = UserInfo.objects.get(id=request.session['user_id'])
+    # receiveInformation = UserInfo.objects.get(id=request.session['user_id').receiveInformation
+    # receiveInfo=ReceiveInfo.objects.filter(id=receiveInformation)
+    # userInfo.receiveInfo_set.filter()
+
+    receiveInfo = ReceiveInfo.objects.filter(userinfo=request.session['user_id'])
+    phonenumber = receiveInfo[0].phoneNumber
+    address = receiveInfo[0].address
+    context = {'title': '用户中心', 'user_number': phonenumber,
+               'user_name': request.session['user_name'], 'address': address}
     return render(request, 'df_user/user_center_info.html', context)
+
+
+# 全部订单
+def user_center_order(request):
+    return render(request, 'df_user/user_center_order.html')
+
+
+# 收货地址
+def user_center_site(request):
+    # print(request.session['user_id'])
+    receiveInfo = ReceiveInfo.objects.filter(userinfo=request.session['user_id'])
+    print(receiveInfo)
+    phonenumber = receiveInfo[0].phoneNumber
+    address = receiveInfo[0].address
+    username = receiveInfo[0].username
+    context = {'username': username, 'address': address, 'phoneNumber': phonenumber}
+    return render(request, 'df_user/user_center_site.html', context)
+
+
+# 添加地址信息
+def user_site_handle(request):
+    post = request.POST
+    username = post.get('username')
+    address = post.get('address')
+    postalCode = post.get('postalCode')
+    phoneNumber = post.get('phoneNumber')
+    receiveinfo = ReceiveInfo()
+    receiveinfo.username = username
+    receiveinfo.postalCode = postalCode
+    receiveinfo.phoneNumber = phoneNumber
+    receiveinfo.address = address
+    receiveinfo.save()
+    return HttpResponse('ok')
