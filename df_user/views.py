@@ -1,5 +1,5 @@
 import string
-
+from . import user_decoraor
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render,redirect
 from .models import *
@@ -44,6 +44,10 @@ def login(request):
     return render(request, 'df_user/login.html', context)
 
 
+def logout(request):
+    request.session.flush()
+    return redirect('/user/login/')
+
 # 用户名已经存在查询
 def register_exist(request):
     uname = request.GET.get('uname')
@@ -65,7 +69,7 @@ def user_login_handle(request):
         if s1.hexdigest() == users[0].password:
             red = HttpResponseRedirect('/user/user_center_info/')
             # 记住用户名
-            if jizhu!=0:
+            if jizhu != 0:
                 red.set_cookie('username', username)
             else:
                 red.set_cookie('username', '', max_age=-1)
@@ -73,14 +77,15 @@ def user_login_handle(request):
             request.session['user_name'] = username
             return red
         else:
-            context = {'title': '用户登录', 'error_name': 0, 'error_pwd': 1, 'uname': username, 'upwd': pwd}
+            context = {'request': request, 'title': '用户登录', 'error_name': 0, 'error_pwd': 1, 'username': username, 'upwd': pwd}
             return render(request, 'df_user/login.html', context)
     else:
-        context = {'title': '用户登录', 'error_name': 1, 'error_pwd': 0, 'uname': username, 'upwd': pwd}
+        context = {'title': '用户登录', 'error_name': 1, 'error_pwd': 0, 'username': username, 'upwd': pwd}
         return render(request, 'df_user/login.html', context)
 
 
 # 用户中心
+@user_decoraor.login
 def user_center_info(request):
     userInfo = UserInfo.objects.get(id=request.session['user_id'])
     # receiveInformation = UserInfo.objects.get(id=request.session['user_id').receiveInformation
@@ -96,11 +101,13 @@ def user_center_info(request):
 
 
 # 全部订单
+@user_decoraor.login
 def user_center_order(request):
     return render(request, 'df_user/user_center_order.html')
 
 
 # 收货地址
+@user_decoraor.login
 def user_center_site(request):
     # print(request.session['user_id'])
     receiveInfo = ReceiveInfo.objects.filter(userinfo=request.session['user_id'])

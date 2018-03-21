@@ -5,21 +5,27 @@
 	<title>天天生鲜-商品详情</title>
 	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
-
+    <link rel="script" href="/static/js/jquery-1.12.4.min.js">
 </head>
 <body>
 	<div class="header_con">
 		<div class="header">
 			<div class="welcome fl">欢迎来到天天生鲜!</div>
 			<div class="fr">
-				<div class="login_info fl">
-					欢迎您：<em>张 山</em>
-				</div>
-				<div class="login_btn fl">
-					<a href="/user/login">登录</a>
-					<span>|</span>
-					<a href="/user/register">注册</a>
-				</div>
+				{% if request.session.user_name != '' %}
+                    <div class="login_info fl">
+
+                        <em>欢迎您：{{ request.session.user_name }}</em>
+                        <span>|</span>
+                        <a href="/user/logout/">退出</a>
+                    </div>
+                {% else %}
+                    <div class="login_btn fl">
+                        <a href="/user/login/">登录</a>
+                        <span>|</span>
+                        <a href="/user/register/">注册</a>
+				    </div>
+                {% endif %}
 				<div class="user_link fl">
 					<span>|</span>
 					<a href="/user/user_center_info/">用户中心</a>

@@ -92,6 +92,7 @@ def list(request, tid, pindex, sort):
     pagenator = Paginator(goods, 2)
     page = pagenator.page(int(pindex))
     context = {'goodsinfo': goods,
+               'sort': sort,
                'goodstype': typeid,
                'newsinfo': newsinfo,
                }
